@@ -1,5 +1,19 @@
+" Vim syntax file
+" Language:     TypeScript and TypeScriptReact
+" Maintainer:   Herrington Darkholme
+" Last Change:  2024 Aug 17
+" Changes:      See https://github.com/HerringtonDarkholme/yats.vim
+" Origin:       https://github.com/othree/yajs
+" Credits:      See yats.vim on github
+
+if &cpo =~ 'C'
+  let s:cpo_save = &cpo
+  set cpo&vim
+endif
+
 " Define the default highlighting.
 
+" NOTE: this results in accurate highlighting, but can be slow.
 syntax sync fromstart
 
 "Dollar sign is permitted anywhere in an identifier
@@ -332,14 +346,14 @@ syntax region  typescriptTypeBlock
   \ fold
 
 "Program Keywords
-exec 'syntax keyword typescriptNull null '.(exists('g:typescript_conceal_null') ? 'conceal cchar='.g:typescript_conceal_null : '').' nextgroup=@typescriptSymbols skipwhite skipempty'
-exec 'syntax keyword typescriptNull undefined '.(exists('g:typescript_conceal_undefined') ? 'conceal cchar='.g:typescript_conceal_undefined : '').' nextgroup=@typescriptSymbols skipwhite skipempty'
+syntax keyword typescriptNull null nextgroup=@typescriptSymbols skipwhite skipempty
+syntax keyword typescriptNull undefined nextgroup=@typescriptSymbols skipwhite skipempty
 "this
-exec 'syntax keyword typescriptIdentifier this '.(exists('g:typescript_conceal_this') ? 'conceal cchar='.g:typescript_conceal_this : '').' nextgroup=@afterIdentifier'
-exec 'syntax keyword typescriptIdentifier super '.(exists('g:typescript_conceal_super') ? 'conceal cchar='.g:typescript_conceal_super : '').' nextgroup=@afterIdentifier'
+syntax keyword typescriptIdentifier this nextgroup=@afterIdentifier
+syntax keyword typescriptIdentifier super nextgroup=@afterIdentifier
 "JavaScript Prototype
-exec 'syntax keyword typescriptPrototype prototype '.(exists('g:typescript_conceal_prototype') ? 'conceal cchar='.g:typescript_conceal_prototype : '').' nextgroup=@afterIdentifier'
-exec 'syntax keyword typescriptStatementKeyword return '.(exists('g:typescript_conceal_return') ? 'conceal cchar='.g:typescript_conceal_return : '').' skipwhite contained nextgroup=@typescriptValue containedin=typescriptBlock'
+syntax keyword typescriptPrototype prototype nextgroup=@afterIdentifier
+syntax keyword typescriptStatementKeyword return skipwhite contained nextgroup=@typescriptValue containedin=typescriptBlock
 
 "Syntax coloring for Node.js shebang line
 syntax match   shellbang "^#!.*node\>"
@@ -642,7 +656,7 @@ syntax keyword typescriptReadonlyArrayKeyword readonly
 
 
 " extension
-if get(g:, 'yats_host_keyword', 1)
+if get(g:, 'typescript_host_keyword', 1)
   syntax keyword typescriptGlobal containedin=typescriptIdentifierName Function Boolean nextgroup=typescriptFuncCallArg
   syntax keyword typescriptGlobal containedin=typescriptIdentifierName Error EvalError nextgroup=typescriptFuncCallArg
   syntax keyword typescriptGlobal containedin=typescriptIdentifierName InternalError nextgroup=typescriptFuncCallArg
@@ -1929,7 +1943,7 @@ syntax keyword typescriptAsyncFuncKeyword      await
   \ nextgroup=@typescriptValue,typescriptUsing
   \ skipwhite
 
-exec 'syntax keyword typescriptFuncKeyword '.(exists('g:typescript_conceal_function') ? 'conceal cchar='.g:typescript_conceal_function : '').' function nextgroup=typescriptAsyncFunc,typescriptFuncName,@typescriptCallSignature skipwhite skipempty'
+syntax keyword typescriptFuncKeyword function nextgroup=typescriptAsyncFunc,typescriptFuncName,@typescriptCallSignature skipwhite skipempty
 
 syntax match   typescriptAsyncFunc             contained /*/
   \ nextgroup=typescriptFuncName,@typescriptCallSignature
@@ -2027,7 +2041,7 @@ hi def link typescriptCase                  Conditional
 hi def link typescriptDefault               typescriptCase
 hi def link typescriptBranch                Conditional
 hi def link typescriptIdentifier            Structure
-hi def link typescriptVariable              Identifier
+hi def link typescriptVariable              Keyword
 hi def link typescriptUsing                 Identifier
 hi def link typescriptDestructureVariable   PreProc
 hi def link typescriptEnumKeyword           Identifier
@@ -2035,8 +2049,8 @@ hi def link typescriptRepeat                Repeat
 hi def link typescriptForOperator           Repeat
 hi def link typescriptStatementKeyword      Statement
 hi def link typescriptMessage               Keyword
-hi def link typescriptOperator              Identifier
-hi def link typescriptKeywordOp             Identifier
+hi def link typescriptOperator              Operator
+hi def link typescriptKeywordOp             Operator
 hi def link typescriptCastKeyword           Special
 hi def link typescriptType                  Type
 hi def link typescriptNull                  Boolean
@@ -2047,14 +2061,14 @@ hi def link typescriptDestructureLabel      Function
 hi def link typescriptLabel                 Label
 hi def link typescriptTupleLable            Label
 hi def link typescriptStringProperty        String
-hi def link typescriptImport                Special
+hi def link typescriptImport                Keyword
 hi def link typescriptImportType            Special
 hi def link typescriptAmbientDeclaration    Special
-hi def link typescriptExport                Special
+hi def link typescriptExport                Keyword
 hi def link typescriptExportType            Special
 hi def link typescriptModule                Special
-hi def link typescriptTry                   Special
-hi def link typescriptExceptions            Special
+hi def link typescriptTry                   Exception
+hi def link typescriptExceptions            Exception
 
 hi def link typescriptMember                Function
 hi def link typescriptMethodAccessor        Operator
@@ -2077,7 +2091,7 @@ hi def link typescriptAbstract              Special
 " hi def link typescriptClassHeritage         Function
 " hi def link typescriptInterfaceHeritage     Function
 hi def link typescriptClassStatic           StorageClass
-hi def link typescriptReadonlyModifier      Keyword
+hi def link typescriptReadonlyModifier      StorageClass
 hi def link typescriptInterfaceKeyword      Keyword
 hi def link typescriptInterfaceExtends      Keyword
 hi def link typescriptInterfaceName         Function
@@ -2109,3 +2123,8 @@ hi def link typescriptDecorator             Special
 hi def link typescriptAssertType            Keyword
 
 hi def link typeScript                      NONE
+
+if exists('s:cpo_save')
+  let &cpo = s:cpo_save
+  unlet s:cpo_save
+endif
